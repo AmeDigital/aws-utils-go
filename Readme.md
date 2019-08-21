@@ -10,7 +10,7 @@ Esta lib oferece funções com interfaces simples para executar tarefas comuns.
 * dynamodbutils: oferece interfaces simplificadas para as ações PutItem, GetItem, UpdateItem
 * s3utils: oferece GetObject, GetObjectAsString, ListObjects
 * snsutils: oferece SendMessage, SendMessageWithAttributes
-* localstack: utilitários para iniciar/parar o localstack e seus serviços na máquina local. Está *experimental* ainda e sua interface deve mudar.
+* localstack (**experimental**): utilitários para iniciar/parar o localstack e seus serviços na máquina local. Está *experimental* ainda e sua interface deve mudar.
 
 ## Como importar e utilizar o código
 
