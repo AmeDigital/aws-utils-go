@@ -5,11 +5,11 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
 // GetObject downloads from an s3 bucket an object identified by its key and
@@ -34,13 +34,7 @@ func GetObjectAsString(bucketName string, key string) (data string, err error) {
 
 // ListObjects will retrieve the list of object keys that begins with the given keyPrefix.
 func ListObjects(bucketName string, keyPrefix string) (keysList []*string, err error) {
-
-	sess := session.Must(session.NewSession(&aws.Config{
-		Credentials:                    credentials.NewEnvCredentials(),
-		DisableRestProtocolURICleaning: aws.Bool(true),
-	}))
-
-	svc := s3.New(sess)
+	svc := s3.New(sessionutils.Session)
 	res, err := svc.ListObjects(&s3.ListObjectsInput{
 		Bucket: aws.String(bucketName),
 		Prefix: aws.String(keyPrefix),
@@ -59,6 +53,24 @@ func ListObjects(bucketName string, keyPrefix string) (keysList []*string, err e
 
 	return keysList, nil
 
+}
+
+// PutObject uploads an object to a bucket and returns the url of the object created on s3.
+func PutObject(bucketname string, key string, body string) (location string, err error) {
+	uploader := s3manager.NewUploader(sessionutils.Session)
+	reader := strings.NewReader(body)
+
+	uploadOutput, err := uploader.Upload(&s3manager.UploadInput{
+		Bucket: aws.String(bucketname),
+		Key:    aws.String(key),
+		Body:   reader,
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	return uploadOutput.Location, nil
 }
 
 func getObjectAsBuf(bucketName string, key string) (data *bytes.Buffer, err error) {
