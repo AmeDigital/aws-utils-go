@@ -47,7 +47,8 @@ if err !=nil {
 ## Como gerar uma imagem docker com a lib 'aws-utils-go' embedada
 
 Para que seu código que utilizou 'aws-utils-go' possa ser buildado no bamboo é preciso criar uma imagem docker para golang 
-contendo esta lib deployada na GOPATH. Este projeto vem com um Dockerfile que cria esta imagem.
+contendo esta lib deployada na GOPATH.  
+Este projeto vem com um Dockerfile que cria esta imagem.
 
 O script *build-docker-image.sh* builda a imagem com o nome de *b2wbuild/golang-aws-utils-go:TAG* e publica a mesma no repositório da B2W, *registry.b2w.io*.
 
