@@ -27,16 +27,14 @@ type City struct {
     Id         int
     Name       string
 }
-
-
-// save to the "Cities" table an instance of a "City" struct
-
 city := City{
     Id:         1,
     Name:       "New York",
 }
 
+// save to the "Cities" table an instance of the "City" struct
 err := PutItem("Cities", city)
+
 if err !=nil {
     panic(err)
 }
