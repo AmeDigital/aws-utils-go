@@ -44,23 +44,24 @@ if err !=nil {
 
 É necessario rodar o "go get" para fazer download do aws-utils-go para a sua máquina de desenvolvimento.
 
-## Como buildar seu código no bamboo
+## Como gerar uma imagem docker com a lib 'aws-utils-go' embedada
 
-### Gerar uma imagem docker com a lib embedada
+Para que seu código que utilizou 'aws-utils-go' possa ser buildado no bamboo é preciso criar uma imagem docker para golang 
+contendo esta lib deployada na GOPATH. Este projeto vem com um Dockerfile que cria esta imagem.
 
-Para que seu código possa buildar no bamboo é preciso criar uma imagem golang que tenha esta lib deployada lá dentro.
+O script *build-docker-image.sh* builda a imagem com o nome de *b2wbuild/golang-aws-utils-go:TAG* e publica a mesma no repositório da B2W, *registry.b2w.io*.
 
-O script *build-docker-image.sh* builda a imagem e publica a mesma para o repositório da B2W.
-
-Para utilizar o script rode como o exemplo abaixo:
+Para buildar e publicar uma nova imagem, rode o script como no exemplo:
 
 ```bash
     ./build-docker-image.sh "1.0"
 ```
 
-Onde "1.0" é uma tag name que irá identificar a versão da lib aws-utils-go que foi empacotada.
+Onde "1.0" é uma tag name que irá identificar a versão da lib aws-utils-go que foi empacotada. A medida que esta lib for atualizada, novas tags deverão ser publicadas no repósitório.
 
 O script *build-docker-image.sh* não permite sobrescrever uma tag existente e irá dar erro se já houver uma imagem com a mesma tag no repositório.
+
+## Como buildar o seu código pelo bamboo usando uma imagem docker
 
 ### Criar o 'build plan' usando a imagem gerada
 
