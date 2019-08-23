@@ -43,22 +43,10 @@ package main
 import (
     "stash.b2w/asp/aws-utils-go.git/dynamodbutils"
 )
-
-type City struct {
-    Id         int
-    Name       string
-}
-city := City{
-    Id:         1,
-    Name:       "New York",
-}
-
+...
 // save to the "Cities" table an instance of the "City" struct
-err := PutItem("Cities", city)
-
-if err !=nil {
-    panic(err)
-}
+err := dynamodbutils.PutItem("Cities", city)
+...
 ```
 
 ## Como gerar uma imagem docker com a lib 'aws-utils-go' embedada
