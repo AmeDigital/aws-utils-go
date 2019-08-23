@@ -7,14 +7,22 @@ function die {
     exit 1
 }
 
+function existing_tags {
+    curl http://registry.b2w.io/repository/docker-private/v2/b2wbuild/golang-aws-utils-go/tags/list 2>/dev/null| jq -r ".tags"
+}
+
 function tag_exists {
     declare tag="$1"
-    curl http://registry.b2w.io/repository/docker-private/v2/b2wbuild/golang-aws-utils-go/tags/list 2>/dev/null| jq -r ".tags" | grep -q $tag
+    existing_tags | grep -q $tag
 }
 
 TAG="$1"
 
-[ -z "$TAG" ] && die "Parameter 'TAGNAME' cannot be empty. You must specify a tag name to be associated to the docker image that will be created.\nExample:\n$0 '1.0.0'."
+[ -z "$TAG" ] && die "Parameter 'TAGNAME' cannot be empty. 
+You must specify a tag name to be associated to the docker image that will be created.\n
+Example:\n$0 '1.0.0'.\n
+Existing tags are:\n
+$(existing_tags)"
 
 tag_exists $TAG && die "TAG $TAG already exists in the repository"
 
