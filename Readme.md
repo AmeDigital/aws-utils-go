@@ -49,6 +49,12 @@ err := dynamodbutils.PutItem("Cities", city)
 ...
 ```
 
+## Como extender o aws-utils-go
+
+Se quiser extender o aws-utils-go, atente-se que ao fazer checkout do projeto ele tem obrigatoriamente ficar no diretorio `$GOPAH/src/stash.b2w/asp/aws-utils-go.git`.
+
+Isto é porque o próprio codigo do aws-utils-go, quando faz import de um pacote do mesmo projeto, utiliza no importe do pacote o prefixo `stash.b2w/asp/aws-utils-go.git`.
+
 ## Como gerar uma imagem docker com a lib 'aws-utils-go' embedada
 
 Para que seu código que utilizou 'aws-utils-go' possa ser buildado no bamboo é preciso criar uma imagem docker para golang 
@@ -77,8 +83,4 @@ No bamboo, quando for buildar o seu projeto, utilize a imagem gerada como no exe
 run --volume ${bamboo.build.working.directory}/ame-iot-auth:/go/src/ame-iot-auth --workdir /go/src/ame-iot-auth --rm registry.b2w.io/b2wbuild/golang-aws-utils-go:1.0 /bin/bash -c ./device-api/build.sh
 ```
 
-## Como extender o aws-utils-go
 
-Se quiser extender o aws-utils-go, atente-se que ao fazer checkout do projeto ele tem obrigatoriamente ficar no diretorio `$GOPAH/src/stash.b2w/asp/aws-utils-go.git`.
-
-Isto é porque o próprio codigo do aws-utils-go, quando faz import de um pacote do mesmo projeto, utiliza no importe do pacote o prefixo `stash.b2w/asp/aws-utils-go.git`.
