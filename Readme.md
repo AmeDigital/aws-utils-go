@@ -16,7 +16,7 @@ Esta lib oferece funções com interfaces simples para executar tarefas comuns.
 
 ## Como importar e utilizar o código
 
-### Instalar o aws-utils-go no seu ambiente de desenvolvimento
+#### Instalar o aws-utils-go no seu ambiente de desenvolvimento
 
 Para ser utilizada, a lib aws-utils-go precisa estar deployada em seu diretorio $GOPATH/src. 
 
@@ -33,7 +33,7 @@ Para configurar o git client, rode `vi ~/.gitconfig` e acrescente no final do ar
 
 Feito isto, faça a instalação da lib rodando o `go get stash.b2w/asp/aws-utils-go.git`
 
-### Importar o aws-utils-go no seu código
+#### Importar o aws-utils-go no seu código
 
 Declare o import da lib como no exemplo abaixo:
 
@@ -75,7 +75,7 @@ O script *build-docker-image.sh* não permite sobrescrever uma tag existente e i
 
 ## Como buildar o seu código pelo bamboo usando uma imagem docker
 
-### Criar o 'build plan' usando a imagem gerada
+#### Criar o 'build plan' usando a imagem gerada
 
 No bamboo, quando for buildar o seu projeto, utilize a imagem gerada como no exemplo abaixo:
 
