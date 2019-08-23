@@ -1,7 +1,7 @@
 package sqsutils
 
 import (
-	"aws-utils-go/sessionutils"
+	"stash.b2w/asp/aws-utils-go.git/sessionutils"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/sqs"
