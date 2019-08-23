@@ -1,13 +1,14 @@
 package dynamodbutils
 
 import (
-	"aws-utils-go/sessionutils"
 	"encoding/json"
 	"fmt"
 	"localstack"
 	"os"
 	"reflect"
 	"testing"
+
+	"stash.b2w/asp/aws-utils-go.git/sessionutils"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"

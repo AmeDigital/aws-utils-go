@@ -16,7 +16,26 @@ Esta lib oferece funções com interfaces simples para executar tarefas comuns.
 
 ## Como importar e utilizar o código
 
-Esta lib está publicada no stash. Para importá-la e utilizá-la em seu código siga o exemplo abaixo:
+### Instalar o aws-utils-go no seu ambiente de desenvolvimento
+
+Para ser utilizada, a lib aws-utils-go precisa estar deployada em seu diretorio $GOPATH/src. 
+
+Quem faz este deploy é o `go get stash.b2w/asp/aws-utils-go.git`. Acontece que este comando irá tentar fazer o download via https, e o nosso stash não suporta https, ele suporta ssh.
+
+O `go get` utiliza o git client para fazer o download, portanto precisamos configurar o git client para usar ssh ao falar com o host *stash.b2w*.
+
+Para configurar o git client, rode `vi ~/.gitconfig` e acrescente no final do arquivo as linhas abaixo:
+
+```
+[url "git@stash.b2w:"]
+	insteadOf = https://stash.b2w/
+```
+
+Feito isto, faça a instalação da lib rodando o `go get stash.b2w/asp/aws-utils-go.git`
+
+### Importar o aws-utils-go no seu código
+
+Declare o import da lib como no exemplo abaixo:
 
 ```golang
 package main
@@ -41,8 +60,6 @@ if err !=nil {
     panic(err)
 }
 ```
-
-É necessario rodar o "go get" para fazer download do aws-utils-go para a sua máquina de desenvolvimento.
 
 ## Como gerar uma imagem docker com a lib 'aws-utils-go' embedada
 
@@ -72,4 +89,8 @@ No bamboo, quando for buildar o seu projeto, utilize a imagem gerada como no exe
 run --volume ${bamboo.build.working.directory}/ame-iot-auth:/go/src/ame-iot-auth --workdir /go/src/ame-iot-auth --rm registry.b2w.io/b2wbuild/golang-aws-utils-go:1.0 /bin/bash -c ./device-api/build.sh
 ```
 
+## Como extender o aws-utils-go
 
+Se quiser extender o aws-utils-go, atente-se que ao fazer checkout do projeto ele tem obrigatoriamente ficar no diretorio `$GOPAH/src/stash.b2w/asp/aws-utils-go.git`.
+
+Isto é porque o próprio codigo do aws-utils-go, quando faz import de um pacote do mesmo projeto, utiliza no importe do pacote o prefixo `stash.b2w/asp/aws-utils-go.git`.
