@@ -2,7 +2,6 @@ package dynamodbutils
 
 import (
 	"errors"
-	"promotion-api/libs/awsSession"
 
 	"stash.b2w/asp/aws-utils-go.git/sessionutils"
 
@@ -172,7 +171,7 @@ func PutItemWithConditional(tablename string, item interface{}, conditionalExpre
 		ExpressionAttributeValues: condValues,
 	}
 
-	dynamodbClient := dynamodb.New(awsSession.Session)
+	dynamodbClient := dynamodb.New(sessionutils.Session)
 	_, err = dynamodbClient.PutItem(putItemInput)
 
 	return err
