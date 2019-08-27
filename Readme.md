@@ -51,9 +51,16 @@ err := dynamodbutils.PutItem("Cities", city)
 
 ## Como extender o aws-utils-go
 
-Se quiser extender o aws-utils-go, atente-se que ao fazer checkout do projeto ele tem obrigatoriamente ficar no diretorio `$GOPAH/src/stash.b2w/asp/aws-utils-go.git`.
+Se quiser extender o aws-utils-go o clone do projeto obrigatoriamente tem que ser feito no diretorio `$GOPATH/src/stash.b2w/asp/aws-utils-go.git`.
 
 Isto é porque o próprio codigo do aws-utils-go, quando faz import de um pacote do mesmo projeto, utiliza no importe do pacote o prefixo `stash.b2w/asp/aws-utils-go.git`.
+
+Para fazer o clone, use os comandos:
+```bash
+    mkdir -p $GOPATH/src/stash.b2w/asp/
+    cd $GOPATH/src/stash.b2w/asp/
+    git clone ssh://git@stash.b2w/asp/aws-utils-go.git aws-utils-go.git
+```
 
 ## Como gerar uma imagem docker com a lib 'aws-utils-go' embedada
 
