@@ -56,7 +56,7 @@ Se quiser extender o aws-utils-go o clone do projeto obrigatoriamente tem que se
 Isto é porque o próprio codigo do aws-utils-go, quando faz import de um pacote do mesmo projeto, utiliza no importe do pacote o prefixo `stash.b2w/asp/aws-utils-go.git`.
 
 Para fazer o clone, use os comandos:
-```sh
+```
 mkdir -p $GOPATH/src/stash.b2w/asp/  
 cd $GOPATH/src/stash.b2w/asp/  
 git clone ssh://git@stash.b2w/asp/aws-utils-go.git aws-utils-go.git  
