@@ -25,7 +25,7 @@ func checkIfLocalstackIsInstalled() {
 // startLocalstack - roda o localstack na maquina local ativando os serviços passados como argumento
 // utiliza o script ../runLocalstack.sh para efetivamente iniciar o localstack
 func StartLocalstack(services []string) error {
-	cmd := exec.Command(os.Getenv("GOPATH") + "/src/localstack/runLocalstack.sh")
+	cmd := exec.Command(os.Getenv("GOPATH") + "/src/stash.b2w/asp/aws-utils-go.git/localstack/runLocalstack.sh")
 	newEnv := append(os.Environ(), "SERVICES="+strings.Join(services, ","))
 	cmd.Env = newEnv
 	var out bytes.Buffer
@@ -57,7 +57,7 @@ func StartLocalstack2(services ...Service) error {
 	}
 	var SERVICES_ENV_VAR = "SERVICES=" + strings.Join(servicesNames, ",")
 
-	cmd := exec.Command("localstack", "start")
+	cmd := exec.Command(os.Getenv("GOPATH") + "/src/stash.b2w/asp/aws-utils-go.git/localstack/runLocalstack.sh")
 	cmd.Env = os.Environ()
 	cmd.Env = append(cmd.Env, SERVICES_ENV_VAR)
 
