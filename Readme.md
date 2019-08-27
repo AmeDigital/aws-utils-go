@@ -58,9 +58,9 @@ Isto é porque o próprio codigo do aws-utils-go, quando faz import de um pacote
 Para fazer o clone, use os comandos:
 
 ```shell
-    mkdir -p $GOPATH/src/stash.b2w/asp/  
-    cd $GOPATH/src/stash.b2w/asp/  
-    git clone ssh://git@stash.b2w/asp/aws-utils-go.git aws-utils-go.git  
+mkdir -p $GOPATH/src/stash.b2w/asp/  
+cd $GOPATH/src/stash.b2w/asp/  
+git clone ssh://git@stash.b2w/asp/aws-utils-go.git aws-utils-go.git  
 ```
 
 ## Como gerar uma imagem docker com a lib 'aws-utils-go' embedada
@@ -74,7 +74,7 @@ O script *build-docker-image.sh* builda a imagem com o nome de *b2wbuild/golang-
 Para buildar e publicar uma nova imagem, rode o script como no exemplo:
 
 ```shell
-    ./build-docker-image.sh "1.0"
+./build-docker-image.sh "1.0"
 ```
 
 Onde "1.0" é uma tag name que irá identificar a versão da lib aws-utils-go que foi empacotada. A medida que esta lib for atualizada, novas tags deverão ser publicadas no repósitório.
