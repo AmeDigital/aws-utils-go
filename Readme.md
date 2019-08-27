@@ -57,9 +57,9 @@ Isto é porque o próprio codigo do aws-utils-go, quando faz import de um pacote
 
 Para fazer o clone, use os comandos:
 ```bash
-    mkdir -p $GOPATH/src/stash.b2w/asp/  
-    cd $GOPATH/src/stash.b2w/asp/  
-    git clone ssh://git@stash.b2w/asp/aws-utils-go.git aws-utils-go.git  
+mkdir -p $GOPATH/src/stash.b2w/asp/  
+cd $GOPATH/src/stash.b2w/asp/  
+git clone ssh://git@stash.b2w/asp/aws-utils-go.git aws-utils-go.git  
 ```
 
 ## Como gerar uma imagem docker com a lib 'aws-utils-go' embedada
