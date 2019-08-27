@@ -1,6 +1,8 @@
 package dynamodbutils
 
 import (
+	"errors"
+
 	"stash.b2w/asp/aws-utils-go.git/sessionutils"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -93,6 +95,10 @@ func UpdateItem(tablename string, key Key, fields map[string]interface{}) (err e
 // key := Key{PKName: "personId", PKValue: "10019911"}
 //
 // err = GetItem(tablename, key, &person)
+//
+// The errors returned are:
+//     - ItemNotFoundException: no matching item was found on the database for the given Key
+//     - errors from the aws sdk: see https://docs.aws.amazon.com/sdk-for-go/api/service/dynamodb/#DynamoDB.GetItem
 func GetItem(tablename string, key Key, pointerToOutputObject interface{}) (err error) {
 	svc := dynamodb.New(sessionutils.Session)
 
@@ -116,6 +122,9 @@ func GetItem(tablename string, key Key, pointerToOutputObject interface{}) (err 
 	})
 	if err != nil {
 		return err
+	}
+	if len(getItemOutput.Item) == 0 {
+		return errors.New("ItemNotFoundException")
 	}
 
 	err = dynamodbattribute.UnmarshalMap(getItemOutput.Item, pointerToOutputObject)
