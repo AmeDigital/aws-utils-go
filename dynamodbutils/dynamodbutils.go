@@ -2,6 +2,7 @@ package dynamodbutils
 
 import (
 	"errors"
+	"promotion-api/libs/awsSession"
 
 	"stash.b2w/asp/aws-utils-go.git/sessionutils"
 
@@ -135,17 +136,43 @@ func GetItem(tablename string, key Key, pointerToOutputObject interface{}) (err 
 // PutItem creates or replaces an Item on a Dynamodb table.
 // The given item must be a struct or a map[string]interface{} instance
 func PutItem(tablename string, item interface{}) error {
+	return PutItemWithConditional(tablename, item, "", nil)
+}
+
+// PutItemWithConditional put item with conditional
+// example:
+// queryConditional := "deleted = :deleted"
+// valuesConditional := map[string]interface{}{":deleted": false}
+// err := dynamodbutils.PutItemWithConditional(PROMOTION_TABLE_NAME, promotionPersisted, queryConditional, valuesConditional)
+func PutItemWithConditional(tablename string, item interface{}, conditionalExpression string, conditionalValues map[string]interface{}) error {
 	dynamoItem, err := dynamodbattribute.MarshalMap(item)
 	if err != nil {
 		return err
 	}
 
-	putItemInput := &dynamodb.PutItemInput{
-		TableName: aws.String(tablename),
-		Item:      dynamoItem,
+	var putItemInput *dynamodb.PutItemInput
+
+	var condExp *string
+	if len(conditionalExpression) > 0 {
+		condExp = &conditionalExpression
 	}
 
-	dynamodbClient := dynamodb.New(sessionutils.Session)
+	var condValues map[string]*dynamodb.AttributeValue
+	if len(conditionalValues) > 0 {
+		condValues, err = dynamodbattribute.MarshalMap(conditionalValues)
+		if err != nil {
+			return err
+		}
+	}
+
+	putItemInput = &dynamodb.PutItemInput{
+		TableName:                 aws.String(tablename),
+		Item:                      dynamoItem,
+		ConditionExpression:       condExp,
+		ExpressionAttributeValues: condValues,
+	}
+
+	dynamodbClient := dynamodb.New(awsSession.Session)
 	_, err = dynamodbClient.PutItem(putItemInput)
 
 	return err
