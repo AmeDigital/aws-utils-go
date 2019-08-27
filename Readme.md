@@ -56,10 +56,10 @@ Se quiser extender o aws-utils-go o clone do projeto obrigatoriamente tem que se
 Isto é porque o próprio codigo do aws-utils-go, quando faz import de um pacote do mesmo projeto, utiliza no importe do pacote o prefixo `stash.b2w/asp/aws-utils-go.git`.
 
 Para fazer o clone, use os comandos:
-```
-mkdir -p $GOPATH/src/stash.b2w/asp/  
-cd $GOPATH/src/stash.b2w/asp/  
-git clone ssh://git@stash.b2w/asp/aws-utils-go.git aws-utils-go.git  
+```shell
+    mkdir -p $GOPATH/src/stash.b2w/asp/  
+    cd $GOPATH/src/stash.b2w/asp/  
+    git clone ssh://git@stash.b2w/asp/aws-utils-go.git aws-utils-go.git  
 ```
 
 ## Como gerar uma imagem docker com a lib 'aws-utils-go' embedada
@@ -72,7 +72,7 @@ O script *build-docker-image.sh* builda a imagem com o nome de *b2wbuild/golang-
 
 Para buildar e publicar uma nova imagem, rode o script como no exemplo:
 
-```sh
+```shell
     ./build-docker-image.sh "1.0"
 ```
 
@@ -86,7 +86,7 @@ O script *build-docker-image.sh* não permite sobrescrever uma tag existente e i
 
 No bamboo, quando for buildar o seu projeto, utilize a imagem gerada como no exemplo abaixo:
 
-```sh
+```shell
 run --volume ${bamboo.build.working.directory}/ame-iot-auth:/go/src/ame-iot-auth --workdir /go/src/ame-iot-auth --rm registry.b2w.io/b2wbuild/golang-aws-utils-go:1.0 /bin/bash -c ./device-api/build.sh
 ```
 
