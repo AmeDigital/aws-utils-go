@@ -63,7 +63,7 @@ cd $GOPATH/src/stash.b2w/asp/
 git clone ssh://git@stash.b2w/asp/aws-utils-go.git aws-utils-go.git  
 ```
 
-## Como gerar uma imagem docker com a lib 'aws-utils-go' embedada
+## Gerar uma imagem docker com a lib 'aws-utils-go' embedada e publicar no Nexus B2W
 
 Para que seu código que utilizou 'aws-utils-go' possa ser buildado no bamboo é preciso criar uma imagem docker para golang 
 contendo esta lib deployada na GOPATH.  
@@ -85,7 +85,9 @@ O script *build-docker-image.sh* não permite sobrescrever uma tag existente e i
 
 #### Criar o 'build plan' usando a imagem gerada
 
-No bamboo, quando for buildar o seu projeto, utilize a imagem gerada como no exemplo abaixo:
+No bamboo, quando for buildar o seu projeto, utilize a imagem docker de GO com a aws-utils-go embedada (a que foi criada no passo acima). 
+
+Veja o exemplo abaixo, o comando usado no "build plan" do bamboo usa a imagem *registry.b2w.io/b2wbuild/golang-aws-utils-go:1.0* para buildar a app:
 
 ```shell
 run --volume ${bamboo.build.working.directory}/ame-iot-auth:/go/src/ame-iot-auth --workdir /go/src/ame-iot-auth --rm registry.b2w.io/b2wbuild/golang-aws-utils-go:1.0 /bin/bash -c ./device-api/build.sh
