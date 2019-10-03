@@ -3,6 +3,7 @@ package localstack
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -61,14 +62,12 @@ func StartLocalstack2(services ...Service) error {
 	cmd.Env = os.Environ()
 	cmd.Env = append(cmd.Env, SERVICES_ENV_VAR)
 
-	var out bytes.Buffer
-	var stderr bytes.Buffer
-	cmd.Stdout = &out
-	cmd.Stderr = &stderr
-	err := cmd.Run()
+	out, err := cmd.CombinedOutput()
 	if err != nil {
+		fmt.Println("Error starting localstack with the script " + cmd.Path)
+		fmt.Println("Script output: " + string(out))
 		return err
 	}
-	localstackPID = out.String()
+	localstackPID = string(out)
 	return nil
 }
