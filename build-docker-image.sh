@@ -7,6 +7,12 @@ function die {
     exit 1
 }
 
+# check for script dependencies
+dependencies=(jq curl git docker)
+for dep in ${dependencies[@]}; do
+    which $dep > /dev/null || die "please install '$dep'"
+done
+
 function existing_tags {
     curl http://registry.b2w.io/repository/docker-private/v2/b2wbuild/golang-aws-utils-go/tags/list 2>/dev/null| jq -r ".tags"
 }
