@@ -97,7 +97,9 @@ func UpdateItem(tablename string, key Key, fields map[string]interface{}) (err e
 // err = GetItem(tablename, key, &person)
 //
 // The errors returned are:
-//     - ItemNotFoundException: no matching item was found on the database for the given Key
+//     - ItemNotFoundException: no matching item was found on the database for the given Key.
+//		 This error indicates that the database was queried successfully but the item does not exist.
+//		 Note: use 'err.Error() == "ItemNotFoundException"' to identify this error.
 //     - errors from the aws sdk: see https://docs.aws.amazon.com/sdk-for-go/api/service/dynamodb/#DynamoDB.GetItem
 func GetItem(tablename string, key Key, pointerToOutputObject interface{}) (err error) {
 	svc := dynamodb.New(sessionutils.Session)
