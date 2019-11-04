@@ -14,12 +14,23 @@ for dep in ${dependencies[@]}; do
 done
 
 function existing_tags {
-    curl http://registry.b2w.io/repository/docker-private/v2/b2wbuild/golang-aws-utils-go/tags/list 2>/dev/null| jq -r ".tags"
+    curl http://registry.b2w.io/repository/docker-private/v2/b2wbuild/aws-sdk-go/tags/list 2>/dev/null| jq -r ".tags"
 }
 
 function tag_exists {
     declare tag="$1"
     existing_tags | grep -q $tag
+}
+
+function download_lib {
+    declare libname="$1"
+    if [ -d "$libname" ]; then
+        cd $libname || return 1
+        git pull || return 1
+        cd ..
+    else
+        git clone https://github.com/aws/$libname.git
+    fi
 }
 
 TAG="$1"
@@ -33,9 +44,21 @@ $(existing_tags)"
 tag_exists $TAG && die "TAG $TAG already exists in the repository"
 
 
-IMAGE_NAME="registry.b2w.io/b2wbuild/golang-aws-utils-go:${TAG}"
+IMAGE_NAME="registry.b2w.io/b2wbuild/aws-sdk-go:${TAG}"
 
 SEPARATOR="#######################################################################################"
+
+echo "Downloading aws-sdk-go from github..."
+download_lib aws-sdk-go || die "failed downloading lib aws-sdk-go"
+
+# make sure the chosen TAG maches the aws-sdk-go version 
+version_file="aws-sdk-go/aws/version.go"
+[ -f $version_file ] || die "where is the file $version_file?"
+grep "\"$TAG\"" "$version_file" > /dev/null || \
+    die "Tag '$TAG' does not match the version from the file $version_file.\nCurrent version is:$(cat $version_file | grep 'const SDKVersion' | cut -d'=' -f2)"
+
+echo "Download aws-lambda-go from github"
+download_lib aws-lambda-go || die "failed downloading lib aws-lambda-go"
 
 echo $SEPARATOR
 echo "creating image $IMAGE_NAME"
