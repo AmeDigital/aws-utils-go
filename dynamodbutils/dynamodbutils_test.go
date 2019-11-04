@@ -3,11 +3,11 @@ package dynamodbutils
 import (
 	"encoding/json"
 	"fmt"
-	"localstack"
 	"os"
 	"reflect"
 	"testing"
 
+	"stash.b2w/asp/aws-utils-go.git/localstack"
 	"stash.b2w/asp/aws-utils-go.git/sessionutils"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -37,7 +37,7 @@ func TestMain(m *testing.M) {
 	}
 
 	// cria recursos no localstack,
-	err := localstack.StartLocalstack([]string{"dynamodb"})
+	err := localstack.StartLocalstack2(localstack.Services.DynamoDB)
 	check(err)
 
 	// configures dynamodb client to use localstack
@@ -147,6 +147,18 @@ func TestPutItemUpdateItemAndGetItem(t *testing.T) {
 	}
 }
 
+func TestGetInexistentItem(t *testing.T) {
+	newCity := City{}
+	key := Key{PKName: "State", PKValue: "bleh bleh", SKName: "Id", SKValue: 888}
+	err := GetItem(tablename, key, &newCity)
+
+	if err == nil {
+		t.Error("err object should not be nil")
+	} else if err.Error() != "ItemNotFoundException" {
+		t.Errorf("err should be 'ItemNotFoundException' but was '%s'.\n", err.Error())
+	}
+}
+
 func objectToJsonString(obj interface{}) string {
 	b, err := json.Marshal(obj)
 	check(err)
@@ -164,5 +176,4 @@ func TestType(t *testing.T) {
 func get(items interface{}) {
 	itemType := reflect.TypeOf(items)
 	fmt.Println(itemType)
-
 }
