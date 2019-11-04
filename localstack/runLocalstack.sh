@@ -2,28 +2,8 @@
 
 function die {
     declare MSG="$@"
-    echo "$0: Error: $MSG">&2
+    echo -e "\n$0: Error: $MSG">&2
     exit 1
-}
-
-# inicia o localstack em background, 
-# direciona o output para um arquivo de log
-# bloqueia a thread até que apareça a string "Ready." no log, com um timeout de $TIMEOUT segundos
-# retorna uma string com o PID do localstack
-function start_localstack {        
-    declare OUTPUT_FILE=/tmp/localstack-start.log
-    localstack start > $OUTPUT_FILE 2>&1 &
-    declare LOCALSTACK_PID="$!"
-    declare TIMEOUT=15
-    while ! grep -Eq "^Ready\.$" $OUTPUT_FILE; do
-        ((TIMEOUT > 0)) || die "Timeout ao iniciar o localstack. \
-            Favor tentar inicia-lo na mão com o comando 'localstack start'.
-            $(cat $OUTPUT_FILE)"
-        sleep 1
-        ((TIMEOUT--))
-    done
-    rm $OUTPUT_FILE
-    echo $LOCALSTACK_PID
 }
 
 ##########################
@@ -38,7 +18,29 @@ which localstack > /dev/null || die "localstack não está instalado. Instale-o 
 
 [ -z "$SERVICES" ] && die "A variável de ambiente SERVICES não pode ser vazia. Quais serviços vc quer rodar?"
 
-# Iniciando o localstack... 
-LOCALSTACK_PID=$(start_localstack)
-[ -z $LOCALSTACK_PID ] && die "Bug: variavel LOCALSTACK_PID não pode estar vazia!"
+# inicia o localstack em background, 
+# direciona o output para um arquivo de log
+# bloqueia a thread até que apareça a string "Ready." no log, com um timeout de $TIMEOUT segundos
+# retorna uma string com o PID do localstack
+
+OUTPUT_FILE=/tmp/localstack-start.log
+FORCE_NONINTERACTIVE=true localstack start > $OUTPUT_FILE 2>&1 &
+LOCALSTACK_PID="$!"
+TIMEOUT=60
+while ! grep -Eq "^Ready\.$" $OUTPUT_FILE; do
+    ((TIMEOUT > 0)) || die "Timeout ao iniciar o localstack. \
+        Favor tentar inicia-lo na mão com o comando 'localstack start'\n.
+        $(cat $OUTPUT_FILE >&2)"
+
+    ps $LOCALSTACK_PID > /dev/null || die "O processo do localstack $LOCALSTACK_PID não está mais rodando.\n \
+        $(cat $OUTPUT_FILE >&2)"
+
+    sleep 1
+
+    ((TIMEOUT--))
+done
+rm $OUTPUT_FILE
+
+
+[ -z "$LOCALSTACK_PID" ] && die "Bug: variavel LOCALSTACK_PID não pode estar vazia!"
 echo -n $LOCALSTACK_PID
