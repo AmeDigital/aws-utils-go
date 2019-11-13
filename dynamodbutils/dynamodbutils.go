@@ -89,6 +89,12 @@ func UpdateItem(tablename string, key Key, fields map[string]interface{}) (err e
 // the data comming from dynamo
 //
 // Example:
+// type Person struct {
+//     // it has to start with Uppercase letter otherwise GetItem will silently fail!
+//     Id int           `json:"id"`
+//	   // it has to start with Uppercase letter otherwise GetItem will silently fail!
+//     Name string      `json:"name"`
+// }
 //
 // person := Person{}
 //
