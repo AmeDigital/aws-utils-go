@@ -17,6 +17,7 @@ import (
 
 var dynamodbClient *dynamodb.DynamoDB
 var tablename = "cities"
+var indexname = "NameToPkSk"
 
 var check func(e error) = func(e error) {
 	if e != nil {
@@ -73,6 +74,10 @@ func createTable(tablename string) {
 				AttributeName: aws.String("Id"),
 				AttributeType: aws.String("N"),
 			},
+			{
+				AttributeName: aws.String("Name"),
+				AttributeType: aws.String("S"),
+			},
 		},
 		KeySchema: []*dynamodb.KeySchemaElement{
 			{
@@ -88,6 +93,24 @@ func createTable(tablename string) {
 		ProvisionedThroughput: &dynamodb.ProvisionedThroughput{
 			ReadCapacityUnits:  aws.Int64(10),
 			WriteCapacityUnits: aws.Int64(10),
+		},
+		GlobalSecondaryIndexes: []*dynamodb.GlobalSecondaryIndex{
+			{
+				IndexName: aws.String(indexname),
+				KeySchema: []*dynamodb.KeySchemaElement{
+					{
+						AttributeName: aws.String("Name"),
+						KeyType:       aws.String("HASH"),
+					},
+				},
+				Projection: &dynamodb.Projection{
+					ProjectionType: aws.String(dynamodb.ProjectionTypeAll),
+				},
+				ProvisionedThroughput: &dynamodb.ProvisionedThroughput{
+					ReadCapacityUnits:  aws.Int64(10),
+					WriteCapacityUnits: aws.Int64(10),
+				},
+			},
 		},
 	}
 
@@ -144,6 +167,41 @@ func TestPutItemUpdateItemAndGetItem(t *testing.T) {
 
 	if arr != newAliases {
 		t.Errorf("Aliases should be %s but was %s", newAliases, newCity.Aliases)
+	}
+}
+
+func TestFindOneFromIndex(t *testing.T) {
+
+	var err error
+
+	expected := City{
+		State:      "NJ",
+		Id:         2,
+		Name:       "Hollow",
+		Population: 1000,
+		Aliases:    []string{"hollow town"},
+	}
+
+	another := City{
+		State:      "NJ",
+		Id:         3,
+		Name:       "Prank",
+		Population: 3000,
+		Aliases:    []string{"prank town"},
+	}
+
+	err = PutItem(tablename, expected)
+	check(err)
+	err = PutItem(tablename, another)
+	check(err)
+
+	found := City{}
+
+	err = FindOneFromIndex(tablename, indexname, Key{PKName: "Name", PKValue: "Hollow"}, &found)
+	check(err)
+
+	if !reflect.DeepEqual(expected, found) {
+		t.Error(fmt.Sprintf("Expected: %+v, Result: %+v", expected, found))
 	}
 }
 

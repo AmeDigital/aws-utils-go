@@ -140,6 +140,54 @@ func GetItem(tablename string, key Key, pointerToOutputObject interface{}) (err 
 	return err
 }
 
+// FindOneFromIndex works like GetItem() but runs a query to a secondary index table in order to find the item.
+// This method is meant to be used when the given key will match a single item from the index and
+// it will throw a 'MultipleItemsFound' error if the query returns more than one item.
+//
+// The errors returned are:
+//     - ItemNotFoundException: no matching item was found on the database for the given Key.
+//		 This error indicates that the database was queried successfully but the item does not exist.
+//		 Note: use 'err.Error() == "ItemNotFoundException"' to identify this error.
+// 	   - MultipleItemsFound: the query retrieved more than one item.
+//		 Note: use 'err.Error() == "MultipleItemsFound"' to identify this error.
+//     - errors from the aws sdk: see https://docs.aws.amazon.com/sdk-for-go/api/service/dynamodb/#DynamoDB.GetItem
+func FindOneFromIndex(tablename string, indexname string, key Key, pointerToOutputObject interface{}) (err error) {
+	svc := dynamodb.New(sessionutils.Session)
+
+	keyCondition := expression.Key(key.PKName).Equal(expression.Value(key.PKValue))
+
+	if len(key.SKName) > 0 {
+		keyCondition = expression.KeyAnd(keyCondition, expression.Key(key.SKName).Equal(expression.Value(key.SKValue)))
+	}
+
+	expr, err := expression.NewBuilder().WithKeyCondition(keyCondition).Build()
+
+	if err != nil {
+		return err
+	}
+
+	queryOutput, err := svc.Query(&dynamodb.QueryInput{
+		TableName:                 &tablename,
+		IndexName:                 &indexname,
+		KeyConditionExpression:    expr.KeyCondition(),
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+	})
+	if err != nil {
+		return err
+	}
+
+	if len(queryOutput.Items) == 0 {
+		return errors.New("ItemNotFoundException")
+	} else if len(queryOutput.Items) > 1 {
+		return errors.New("MultipleItemsFound")
+	}
+
+	err = dynamodbattribute.UnmarshalMap(queryOutput.Items[0], pointerToOutputObject)
+
+	return err
+}
+
 // PutItem creates or replaces an Item on a Dynamodb table.
 // The given item must be a struct or a map[string]interface{} instance
 func PutItem(tablename string, item interface{}) error {
