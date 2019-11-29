@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"reflect"
 	"errors"
-	"encoding/json"
 	"stash.b2w/asp/aws-utils-go.git/sessionutils"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -24,6 +23,25 @@ func convertAWSDataType(value interface{}) (string, error) {
 		default:
 			return "", errors.New("Type unknown")
 	}
+}
+
+func GetMessageAttribute(queueUrl string, attributeName string) (string, error) {
+	SQSclient := sqs.New(sessionutils.Session)
+	
+	var attributesNamesList []*string
+	
+	attributesNamesList = append(attributesNamesList, aws.String(attributeName))
+
+	response, err := SQSclient.GetQueueAttributes(&sqs.GetQueueAttributesInput{
+		AttributeNames: attributesNamesList,
+		QueueUrl:    &queueUrl,
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	return *response.Attributes[attributeName], err
 }
 
 func SendMessage(queueUrl string, message string, messageAttributes map[string]interface{}) error {
@@ -49,17 +67,11 @@ func SendMessage(queueUrl string, message string, messageAttributes map[string]i
 		}
 
 		sendMessageInput.MessageAttributes = msgAttributeValueMap
-
-		jsonBytes, _ := json.Marshal(sendMessageInput)
-		fmt.Printf("SENDMESSAGE sendMessageInput: %+v\n", string(jsonBytes))
 	}
 
 	SQSclient := sqs.New(sessionutils.Session)
 
-	_, err := SQSclient.SendMessage(&sqs.SendMessageInput{
-		MessageBody: aws.String(message),
-		QueueUrl:    &queueUrl,
-	})
+	_, err := SQSclient.SendMessage(&sendMessageInput)
 
 	return err
 }
@@ -83,7 +95,7 @@ func ReadMessage(queueUrl string, maxNumberOfMessages int64) ([]*sqs.Message, er
 	return result.Messages, err
 }
 
-func Delete(queueUrl string, receiptHandle string) error {
+func DeleteMessage(queueUrl string, receiptHandle string) error {
 	SQSclient := sqs.New(sessionutils.Session)
 
 	_, err := SQSclient.DeleteMessage(&sqs.DeleteMessageInput{
