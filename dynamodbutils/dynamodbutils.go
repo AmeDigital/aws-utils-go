@@ -3,7 +3,7 @@ package dynamodbutils
 import (
 	"errors"
 
-	"stash.b2w/asp/aws-utils-go.git/sessionutils"
+	"github.com/AmeDigital/aws-utils-go/sessionutils"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"

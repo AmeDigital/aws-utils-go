@@ -20,7 +20,7 @@ Esta lib oferece funções com interfaces simples para executar tarefas comuns.
 
 Para ser utilizada, a lib aws-utils-go precisa estar deployada em seu diretorio $GOPATH/src. 
 
-Quem faz este deploy é o `go get stash.b2w/asp/aws-utils-go.git`. Acontece que este comando irá tentar fazer o download via https, e o nosso stash não suporta https, ele suporta ssh.
+Quem faz este deploy é o `go get github.com/AmeDigital/aws-utils-go`. Acontece que este comando irá tentar fazer o download via https, e o nosso stash não suporta https, ele suporta ssh.
 
 O `go get` utiliza o git client para fazer o download, portanto precisamos configurar o git client para usar ssh ao falar com o host *stash.b2w*.
 
@@ -31,7 +31,7 @@ Para configurar o git client, rode `vi ~/.gitconfig` e acrescente no final do ar
 	insteadOf = https://stash.b2w/
 ```
 
-Feito isto, faça a instalação da lib rodando o `go get stash.b2w/asp/aws-utils-go.git`
+Feito isto, faça a instalação da lib rodando o `go get github.com/AmeDigital/aws-utils-go`
 
 #### Importar o aws-utils-go no seu código
 
@@ -41,7 +41,7 @@ Declare o import da lib como no exemplo abaixo:
 package main
 
 import (
-    "stash.b2w/asp/aws-utils-go.git/dynamodbutils"
+    "github.com/AmeDigital/aws-utils-go/dynamodbutils"
 )
 ...
 // save to the "Cities" table an instance of the "City" struct
@@ -51,16 +51,16 @@ err := dynamodbutils.PutItem("Cities", city)
 
 ## Como extender o aws-utils-go
 
-Se quiser extender o aws-utils-go o clone do projeto obrigatoriamente tem que ser feito no diretorio `$GOPATH/src/stash.b2w/asp/aws-utils-go.git`.
+Se quiser extender o aws-utils-go o clone do projeto obrigatoriamente tem que ser feito no diretorio `$GOPATH/src/github.com/AmeDigital/aws-utils-go`.
 
-Isto é porque o próprio codigo do aws-utils-go, quando faz import de um pacote do mesmo projeto, utiliza no importe do pacote o prefixo `stash.b2w/asp/aws-utils-go.git`.
+Isto é porque o próprio codigo do aws-utils-go, quando faz import de um pacote do mesmo projeto, utiliza no importe do pacote o prefixo `github.com/AmeDigital/aws-utils-go`.
 
 Para fazer o clone, use os comandos:
 
 ```shell
 mkdir -p $GOPATH/src/stash.b2w/asp/  
 cd $GOPATH/src/stash.b2w/asp/  
-git clone ssh://git@stash.b2w/asp/aws-utils-go.git aws-utils-go.git  
+git clone ssh://git@github.com/AmeDigital/aws-utils-go aws-utils-go.git  
 ```
 
 ## Gerar uma imagem docker com a lib 'aws-utils-go' embedada e publicar no Nexus B2W
