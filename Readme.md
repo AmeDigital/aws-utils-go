@@ -47,7 +47,6 @@ Isto é porque o próprio codigo do aws-utils-go, quando faz import de um pacote
 Para fazer o clone, use os comandos:
 
 ```shell
-mkdir -p $GOPATH/src/stash.b2w/asp/  
-cd $GOPATH/src/stash.b2w/asp/  
+mkdir -p $GOPATH/src/github.com/AmeDigital && cd $GOPATH/src/github.com/AmeDigital  
 git clone ssh://git@github.com/AmeDigital/aws-utils-go aws-utils-go.git  
 ```
