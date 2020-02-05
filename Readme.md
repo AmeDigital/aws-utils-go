@@ -1,4 +1,4 @@
-# aws-utils-go s
+# aws-utils-go
 ## Utilitários com interface simples para acessar serviços da AWS
 
 A aws disponibiliza para a linguagem go a sdk aws-sdk-go, porém sua interface pode ser bem complicada.
