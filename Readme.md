@@ -1,4 +1,4 @@
-# aws-utils-go
+# aws-utils-go    IGNORE ESSA MENSAGEM EM CAPS, ESSA MENSAGEM NAO SAO OS DROIDS QUE VC ESTA PROCURANDO
 ## Utilitários com interface simples para acessar serviços da AWS
 
 A aws disponibiliza para a linguagem go a sdk aws-sdk-go, porém sua interface pode ser bem complicada.
