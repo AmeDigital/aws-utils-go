@@ -76,6 +76,31 @@ func UpdateItem(tablename string, key Key, fields map[string]interface{}) (err e
 	return err
 }
 
+func DeleteItem(tablename string, key Key) (err error) {
+	svc := dynamodb.New(sessionutils.Session)
+
+	keyAttributes := make(map[string]*dynamodb.AttributeValue)
+
+	keyAttributes[key.PKName], err = dynamodbattribute.Marshal(key.PKValue)
+	if err != nil {
+		return err
+	}
+
+	if len(key.SKName) > 0 {
+		keyAttributes[key.SKName], err = dynamodbattribute.Marshal(key.SKValue)
+		if err != nil {
+			return err
+		}
+	}
+
+	_, err = svc.DeleteItem(&dynamodb.DeleteItemInput{
+		TableName: &tablename,
+		Key:       keyAttributes,
+	})
+
+	return err
+}
+
 // GetItem retrieves from the table the item identified by its partition key (and sort key if given)
 // then returns the item in the form of an instance of your choice.
 //
