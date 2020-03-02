@@ -76,6 +76,8 @@ func UpdateItem(tablename string, key Key, fields map[string]interface{}) (err e
 	return err
 }
 
+// DeleteItem - deletes an item from dynamodb
+// Note: this function won't return error if the item was not found on the table.
 func DeleteItem(tablename string, key Key) (err error) {
 	svc := dynamodb.New(sessionutils.Session)
 
