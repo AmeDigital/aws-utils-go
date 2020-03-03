@@ -27,7 +27,7 @@ func checkIfLocalstackIsInstalled() {
 func StartLocalstack(serviceNames []string) error {
 	var SERVICES_ENV_VAR = "SERVICES=" + strings.Join(serviceNames, ",")
 
-	cmd := exec.Command(os.Getenv("GOPATH") + "/src/stash.b2w/asp/aws-utils-go.git/localstack/runLocalstack.sh")
+	cmd := exec.Command(os.Getenv("GOPATH") + "/src/github.com/AmeDigital/aws-utils-go/localstack/runLocalstack.sh")
 	cmd.Env = os.Environ()
 	cmd.Env = append(cmd.Env, SERVICES_ENV_VAR)
 
@@ -54,7 +54,7 @@ func StopLocalstack() error {
 		return errors.New("localstackPID nao foi definido. rode StartLocalstack() primeiro.")
 	}
 
-	cmd := exec.Command(os.Getenv("GOPATH") + "/src/stash.b2w/asp/aws-utils-go.git/localstack/stopLocalstack.sh")
+	cmd := exec.Command(os.Getenv("GOPATH") + "/src/github.com/AmeDigital/aws-utils-go/localstack/stopLocalstack.sh")
 	err := cmd.Run()
 	if err != nil {
 		return err
