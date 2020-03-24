@@ -1,7 +1,6 @@
 package services
 
 import (
-	"ame-iot-auth/device-api/libs/awsSession"
 	"fmt"
 
 	"github.com/AmeDigital/aws-utils-go/sessionutils"
@@ -96,7 +95,7 @@ func GetUserIdentityId(username string, password string, appClientId string, ide
 }
 
 func ListUsersWithPrefixFilter(attributeName string, prefix string, userPoolId string) (usernames []string, err error) {
-	var cognitoIdpClient *cognitoidentityprovider.CognitoIdentityProvider = cognitoidentityprovider.New(awsSession.Session)
+	var cognitoIdpClient *cognitoidentityprovider.CognitoIdentityProvider = cognitoidentityprovider.New(sessionutils.Session)
 
 	listUsersInput := &cognitoidentityprovider.ListUsersInput{
 		UserPoolId: &userPoolId,
