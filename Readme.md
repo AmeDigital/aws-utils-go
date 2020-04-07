@@ -7,7 +7,7 @@ Esta lib oferece funções com interfaces simples para executar tarefas comuns.
 
 ## Pacotes
 
-* dynamodbutils: oferece interfaces simplificadas para as ações PutItem, GetItem, UpdateItem, PutItemWithConditional, FindOneFromIndex
+* dynamodbutils: oferece interfaces simplificadas para as ações PutItem, GetItem, UpdateItem, PutItemWithConditional, FindOneFromIndex, Query
 * s3utils: oferece GetObject, GetObjectAsString, ListObjects, PutObject.
 * snsutils: oferece SendMessage, SendMessageWithAttributes.
 * sqsutils: oferece SendMessage, ReadMessage, DeleteMessage, GetMessageAttribute
