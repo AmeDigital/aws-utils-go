@@ -446,3 +446,78 @@ func get(items interface{}) {
 	itemType := reflect.TypeOf(items)
 	fmt.Println(itemType)
 }
+
+func TestBatchGetItem(t *testing.T) {
+	bh := City{
+		Name:  "Belo Horizonte",
+		Id:    1,
+		State: "MG",
+	}
+
+	divinopolis := City{
+		Name:  "Divinópolis",
+		Id:    2,
+		State: "MG",
+	}
+
+	ouroPreto := City{
+		Name:  "Ouro Preto",
+		Id:    3,
+		State: "MG",
+	}
+
+	PutItem(tablename, bh)
+	PutItem(tablename, divinopolis)
+	PutItem(tablename, ouroPreto)
+
+	cities := []City{}
+
+	keys := []Key{
+		Key{
+			PKName:  "State",
+			PKValue: "MG",
+			SKName:  "Id",
+			SKValue: 1,
+		},
+		Key{
+			PKName:  "State",
+			PKValue: "MG",
+			SKName:  "Id",
+			SKValue: 2,
+		},
+	}
+
+	err := BatchGetItem(tablename, keys, &cities)
+
+	if err != nil {
+		t.Error("BatchGetItem() failed with error: " + err.Error())
+	} else if len(cities) != 2 {
+		t.Error(fmt.Sprintf("cities should have length 2 but has %d", len(cities)))
+	} else {
+		if !reflect.DeepEqual(cities[0], bh) {
+			t.Error("city 0 is not bh")
+		} else if !reflect.DeepEqual(cities[1], divinopolis) {
+			t.Error("city 1 is not divinopolis")
+		}
+	}
+
+	// test query for inexistent item
+	keys = []Key{
+		Key{
+			PKName:  "State",
+			PKValue: "MG",
+			SKName:  "Id",
+			SKValue: 100,
+		},
+	}
+
+	cities = []City{}
+
+	err = BatchGetItem(tablename, keys, &cities)
+	if err != nil {
+		t.Error("BatchGetItem() failed with error: " + err.Error())
+	} else if len(cities) != 0 {
+		t.Error(fmt.Sprintf("cities should have length 0 but had %d", len(cities)))
+	}
+
+}

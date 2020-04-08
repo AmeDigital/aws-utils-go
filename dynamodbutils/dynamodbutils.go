@@ -369,3 +369,55 @@ func Query(tablename string, keyCondition KeyCondition, pointerToOuputSlice inte
 
 	return err
 }
+
+// Retrieves a list of items identified by their keys from the given table and fills the slice
+// pointed by 'pointerToOutputSlice' with the items found, if any
+func BatchGetItem(tablename string, keys []Key, pointerToOuputSlice interface{}) (err error) {
+	rv := reflect.ValueOf(pointerToOuputSlice)
+	if rv.Kind() != reflect.Ptr || rv.Elem().Kind() != reflect.Slice {
+		return fmt.Errorf("dynamodbutils.BatchGetItem: pointerToOutputSlice must be a slice pointer")
+	}
+
+	dynamodbClient := dynamodb.New(sessionutils.Session)
+
+	keyAttributesListOfMaps := []map[string]*dynamodb.AttributeValue{}
+
+	for _, key := range keys {
+		keyAttributesMap := make(map[string]*dynamodb.AttributeValue)
+
+		keyAttributesMap[key.PKName], err = dynamodbattribute.Marshal(key.PKValue)
+		if err != nil {
+			return err
+		}
+
+		if len(key.SKName) > 0 {
+			keyAttributesMap[key.SKName], err = dynamodbattribute.Marshal(key.SKValue)
+			if err != nil {
+				return err
+			}
+		}
+
+		keyAttributesListOfMaps = append(keyAttributesListOfMaps, keyAttributesMap)
+	}
+
+	input := &dynamodb.BatchGetItemInput{
+		RequestItems: map[string]*dynamodb.KeysAndAttributes{
+			tablename: {
+				Keys: keyAttributesListOfMaps,
+			},
+		},
+	}
+
+	result, err := dynamodbClient.BatchGetItem(input)
+	if err != nil {
+		return err
+	}
+
+	resultsForThisTable := result.Responses[tablename]
+
+	if len(resultsForThisTable) > 0 {
+		err = dynamodbattribute.UnmarshalListOfMaps(resultsForThisTable, pointerToOuputSlice)
+	}
+
+	return err
+}
