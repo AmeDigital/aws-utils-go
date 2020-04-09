@@ -264,6 +264,7 @@ func PutItemWithConditional(tablename string, item interface{}, conditionalExpre
 
 // KeyCondition allows you set the parameters for a query with 'key condition expression'
 // ref https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Query.html#Query.KeyConditionExpressions
+//   - IndexName: optional. If this value is set the query will run on the index table.
 //   - PKName: primary key name, mandatory.
 //   - PKValue: primary key value, mandatory.
 //   - SKName: sort key name, optional. You must set this value if you what to use the conditions that operate on the sort keys.
@@ -274,8 +275,9 @@ func PutItemWithConditional(tablename string, item interface{}, conditionalExpre
 //   - SKValueGreaterThanEqual: selects items having the sort key value greater than or equal to the the given value
 //   - SKValueBetweenStart and SKValueBetweenEnd: selects items having the sort key value between the given limits, including the limiting items.
 type KeyCondition struct {
-	PKName                  string
-	PKValue                 interface{}
+	IndexName               string      // optional
+	PKName                  string      // mandatory
+	PKValue                 interface{} // mandatory
 	SKName                  string      // optional
 	SKValueEqual            interface{} // optional
 	SKValueLessThan         interface{} // optional
@@ -353,6 +355,10 @@ func Query(tablename string, keyCondition KeyCondition, pointerToOuputSlice inte
 		KeyConditionExpression:    &keyConditionExpression,
 		ExpressionAttributeValues: attributeValues,
 		ExpressionAttributeNames:  attributeNames,
+	}
+
+	if len(keyCondition.IndexName) > 0 {
+		queryInput.IndexName = &keyCondition.IndexName
 	}
 
 	queryOutput, err := dynamodbClient.Query(&queryInput)

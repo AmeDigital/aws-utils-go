@@ -264,6 +264,23 @@ func TestQuery(t *testing.T) {
 		}
 	}
 
+	// testing when sort key is equal to a value on the INDEX table
+	keyCondition = KeyCondition{
+		IndexName: indexname,
+		PKName:    "Name",
+		PKValue:   "Belo Horizonte",
+	}
+
+	err = Query(tablename, keyCondition, &cities)
+
+	if err != nil {
+		t.Error("Query() failed with error: " + err.Error())
+	} else if len(cities) != 1 {
+		t.Error(fmt.Sprintf("cities should have length 1 but has %d", len(cities)))
+	} else if !reflect.DeepEqual(cities[0], bh) {
+		t.Errorf("A busca no indice falhou: %+v", cities[0])
+	}
+
 	// testing when sork key is greater than a value
 	keyCondition = KeyCondition{
 		PKName:             "State",
