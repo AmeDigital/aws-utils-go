@@ -288,7 +288,7 @@ type KeyCondition struct {
 	SKValueBetweenEnd       interface{} // optional
 }
 
-// Runs the query specified by the keyCondition argument on the given table and fills the slice
+// Runs the query specified by the keyCondition argument on the given table or index and fills the slice
 // pointed by 'pointerToOutputSlice' with the items found, if any.
 func Query(tablename string, keyCondition KeyCondition, pointerToOuputSlice interface{}) (err error) {
 	rv := reflect.ValueOf(pointerToOuputSlice)
