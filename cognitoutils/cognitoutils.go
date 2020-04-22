@@ -1,4 +1,4 @@
-package services
+package cognitoutils
 
 import (
 	"fmt"
@@ -92,6 +92,32 @@ func GetUserIdentityId(username string, password string, appClientId string, ide
 	fmt.Println("CognitoGetUserIdentityId end")
 
 	return *getIdOutput.IdentityId, nil
+}
+
+func ListUsers(userPoolId string) (users []*cognitoidentityprovider.UserType, err error) {
+	var cognitoIdpClient *cognitoidentityprovider.CognitoIdentityProvider = cognitoidentityprovider.New(sessionutils.Session)
+
+	listUsersInput := &cognitoidentityprovider.ListUsersInput{
+		UserPoolId: &userPoolId,
+	}
+
+	listUsersOutput, err := cognitoIdpClient.ListUsers(listUsersInput)
+
+	return listUsersOutput.Users, err
+}
+
+func ListUserNames(userPoolId string) (usernames []*string, err error) {
+	users, err := ListUsers(userPoolId)
+
+	if err != nil {
+		return usernames, err
+	}
+
+	for _, user := range users {
+		usernames = append(usernames, user.Username)
+	}
+
+	return usernames, err
 }
 
 func ListUsersWithPrefixFilter(attributeName string, prefix string, userPoolId string) (usernames []string, err error) {
