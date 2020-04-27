@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/AmeDigital/aws-utils-go/localstack"
@@ -167,6 +168,26 @@ func TestPutItemUpdateItemAndGetItem(t *testing.T) {
 
 	if arr != newAliases {
 		t.Errorf("Aliases should be %s but was %s", newAliases, newCity.Aliases)
+	}
+}
+
+func TestPutItemWithConditionalAvoidOverrideExistingItem(t *testing.T) {
+	city := City{
+		State:      "MG",
+		Id:         100,
+		Name:       "Tiradentes",
+		Population: 50000,
+		Aliases:    []string{"Tira"},
+	}
+
+	err := PutItemWithConditional(tablename, city, "attribute_not_exists(Id)", nil)
+	check(err)
+
+	err = PutItemWithConditional(tablename, city, "attribute_not_exists(Id)", nil)
+	if err == nil {
+		t.Error("should not accept overrite item")
+	} else if !strings.Contains(err.Error(), "ConditionalCheckFailedException") {
+		t.Errorf("error should be of type 'ConditionalCheckFailedException' but was %s\n", err.Error())
 	}
 }
 
