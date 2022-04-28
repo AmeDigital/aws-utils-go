@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"localstack"
+
+	"github.com/AmeDigital/aws-utils-go/localstack"
 )
 
 func main() {
