@@ -2,9 +2,9 @@
 name: Ame Digital GitHub Actions
 on:
   push:
-    branches: [main, master, develop, homolog]
+    branches: [main, master, develop, homolog, cyber-actions]
   pull_request:
-    branches: [main, master, develop, homolog]
+    branches: [main, master, develop, homolog, cyber-actions]
     
 jobs:
   EXEC_CYBERSECURITY_SCA:
